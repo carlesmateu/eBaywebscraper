@@ -1,0 +1,133 @@
+Web Scraping eBay: Evolució de Preus del Google Pixel 7 Pro
+
+NOMS INTEGRANTS DEL GRUP: Carles López Mateu
+
+Aquest projecte realitza un procés de web scraping a eBay per obtenir informació sobre les subhastes de Google Pixel 7 Pro. L'objectiu és monitoritzar l'evolució dels preus de les subhastes per aquest model de mòbil, juntament amb altres dades rellevants com l'estat del producte, la ubicació del venedor, i el temps restant per la finalització de la subhasta.
+
+Eines Utilitzades
+
+Aquest projecte utilitza els següents mòduls i llibreries:
+
+- requests: Per fer les peticions HTTP i obtenir el contingut de les pàgines web de eBay.
+- BeautifulSoup: Per parsejar el contingut HTML i extreure la informació rellevant de les pàgines de resultats.
+- pandas: Per gestionar les dades i crear un DataFrame amb els resultats.
+- networkx: Per generar gràfics o representacions visuals (si és necessari per a l'anàlisi).
+- torpy (opcional): Per usar Tor com a proxy per evitar bloquejos d'IP (si és necessari).
+- matplotlib: Per visualitzar els gràfics generats per networkx.
+
+Com Instal·lar
+
+1. Crear un entorn virtual (opcional però recomanat):
+
+   python3 -m venv venv
+   source venv/bin/activate  # en Linux/Mac
+   venv\Scripts\activate  # en Windows
+
+2. Instal·lar les dependències:
+
+   Pots instal·lar totes les dependències necessàries mitjançant pip:
+
+   pip install -r requirements.txt
+
+   El fitxer requirements.txt hauria de contenir les següents dependències:
+
+   requests==2.28.0
+   beautifulsoup4==4.11.1
+   pandas==1.5.3
+   networkx==2.8.7
+   matplotlib==3.6.0
+   torpy==0.0.9
+
+   Si necessites instal·lar les dependències manualment, pots fer-ho utilitzant les següents comandes:
+
+   pip install requests beautifulsoup4 pandas networkx matplotlib torpy
+
+Com Executar el Codi
+
+1. Descarregar Dades de eBay
+
+Per executar el web scraper i obtenir les dades, només cal executar el següent script:
+
+   python main.py
+
+2. Fitxers Generats
+
+- iphone_13_128_filtered.csv: Aquest fitxer CSV conté les dades raspades després d'aplicar els filtres, amb les següents columnes:
+  - Title: Títol de l'anunci.
+  - Price: Preu de la subhasta.
+  - Link: Enllaç a la pàgina de la subhasta.
+  - Image Link: Enllaç a la imatge del producte.
+  - Description: Descripció del producte.
+  - Seller: Nom del venedor.
+  - Location: Ubicació geogràfica del venedor.
+  - Bids: Nombre d'ofertes realitzades.
+  - Time Left: Temps restant per acabar la subhasta.
+  - Seller Rating: Valoració del venedor.
+  - Shipping Info: Informació sobre l'enviament.
+  - Date: Data en què es va extreure la dada.
+
+3. Modificació dels Paràmetres de Cerca
+
+Els paràmetres de cerca es poden personalitzar per adaptar la cerca a altres productes o per ajustar altres filtres. Els següents paràmetres són modificables a main.py:
+
+params = {
+    '_from': 'R40',
+    '_nkw': 'pixel7pro',  # Modificar el terme de cerca per un altre producte
+    'LH_ItemCondition': ebay_filters["item_conditions"]["Used"],  # Filtrar per condició del producte
+    'LH_PrefLoc': ebay_filters["item_locations"]["International"],  # Filtrar per ubicació
+    '_udlo': '200',  # Preu mínim
+    '_udhi': '400',  # Preu màxim
+    '_sacat': ebay_filters["categories"]["No Category"],  # Categoria a buscar
+    '_sop': ebay_filters["sort_order"]["Time: newly listed"],  # Ordre de classificació
+    'LH_Sold': '1',  # Subhastes venudes
+    'LH_Complete': '1',  # Subhastes completes
+    'LH_Auction': '1',  # Només subhastes
+    '_ipg': '240',  # Nombre d'articles per pàgina
+    'rt': 'nc',  # Tipus de resultat
+}
+
+Els paràmetres que pots modificar són:
+- Paraula clau (_nkw): Canvia el terme de cerca per cercar un altre producte.
+- Condició de l'article (LH_ItemCondition): Filtra pels articles usats o nous.
+- Ubicació del venedor (LH_PrefLoc): Filtra per productes de venedors internacionals o locals.
+- Preu mínim i màxim (_udlo, _udhi): Ajusta els límits de preu segons les teves necessitats.
+- Ordre de classificació (_sop): Modifica l'ordre en què es mostren els resultats (per exemple, per "Preu més baix" o "Nous llistats").
+- Tipus de subhasta: Filtres per mostrar només subhastes venudes, completes, o per Buy It Now, etc.
+
+4. Filtratge de Dades
+
+El codi també aplica un filtre per eliminar els resultats que contenen termes prohibits (com "refurbished", "damaged", etc.). Els termes prohibits es poden modificar a la llista forbidden_terms:
+
+forbidden_terms = [    'refurbished', 'parts', 'damaged', 'locked', 'mini', 'verizon',    'at&t', 't-mobile', 'cricket', 'metro', 'boost', 'read description',     '256 GB', '512 GB',]
+
+5. Realitzar un Anàlisi Gràfic (Opcional)
+
+Si vols generar gràfics que representin visualment les dades, pots utilitzar el mòdul networkx per generar un diagrama de connexió entre els venedors, per exemple. Per fer-ho, simplement executa:
+
+   python diagram.py
+
+Aquest script generarà un diagrama de les connexions entre els venedors i els productes, visualitzant les relacions de les subhastes.
+
+Notes Addicionals
+
+Filtratge de Dades
+- El codi actual filtra els resultats per evitar incloure articles en mal estat o reacondicionats. Aquest comportament es pot modificar canviant els termes a la llista forbidden_terms.
+
+Ús de Tor
+- Per evitar bloquejos d'IP, el codi pot ser configurat per fer les peticions a través de Tor (veure el mòdul torpy). Aquest comportament està desactivat per defecte, però pots activar-lo si necessites fer moltes peticions en poc temps.
+
+Contribucions
+
+Si vols contribuir a aquest projecte, pots obrir una pull request amb millores o correccions al codi. Tots els canvis seran revisats abans de ser integrats.
+
+Llicència
+
+Aquest projecte es publica sota la llicència CC0 - Public Domain. Això significa que pots utilitzar, modificar i distribuir aquest projecte de manera gratuïta, sense restriccions.
+
+Contacte
+
+Per a qualsevol dubte o pregunta, pots contactar amb el creador del projecte a mateucarles@uoc.edu.
+
+---
+
+Aquest document proporciona una visió general del projecte i una guia per executar el codi i personalitzar-lo segons les teves necessitats. Si tens alguna pregunta o necessites més informació, no dubtis a contactar amb mi.
